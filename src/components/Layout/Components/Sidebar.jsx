@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { IoClose } from "react-icons/io5";
 import { SidebarNavigation } from "../../../constants/sidebar";
 import { Link, useLocation } from "react-router-dom";
@@ -7,9 +7,9 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-const Sidebar = () => {
+const Sidebar = ({ toggleSideBar, setToggleSideBar }) => {
   const location = useLocation();
-  const [toggleSideBar, setToggleSideBar] = useState(false);
+
   return (
     <div
       id="sidebar"

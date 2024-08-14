@@ -1,14 +1,17 @@
 export const SidebarNavigation = [
   {
-    name: "Home",
+    name: "Guardian Times",
     href: "/",
-    icon: "icon-dashboard",
     current: true,
   },
   {
-    name: "News APIs",
+    name: "The News",
     href: "/news",
-    icon: "icon-icon",
     current: false,
+  },
+  {
+    name: "New York Times",
+    href: "/new-york",
+    current: true,
   },
 ];

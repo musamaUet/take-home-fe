@@ -10,3 +10,5 @@ export const debounce = (func, time) =>
   });
 
 export const  DatetimeFormater = (date) => moment(date).format("DD MMMM YYYY, hh:mm A")
+
+export const  dateFormater = (date) => moment(date).format("YYYY-MM-DD")

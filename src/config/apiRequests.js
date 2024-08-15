@@ -93,50 +93,6 @@ export const postRequest = async (
     });
 };
 
-export const putRequest = async (
-  endpoint,
-  body,
-  headers
-) => {
-  const token = localStorage.getItem("accessToken");
-  return axiosInstance
-    .put(`${endpoint}`, body, {
-      headers: { ...headers, Authorization: token ? `Bearer ${token}` : null },
-    })
-    .then(function (response) {
-      if (response?.status == 401) {
-        toast.error("Session expired!");
-        localStorage.removeItem("accessToken");
-        setTimeout(() => (window.location.href = "/"), 300);
-
-        return;
-      }
-      return response?.data;
-    })
-    .catch(function (error) {
-      if (error.message === "Network Error") {
-        return {
-          status: 500,
-          success: false,
-          message: error?.message,
-          data: {},
-        };
-      } else if (error?.name == "AxiosError") {
-        if (error?.response?.status == 401) {
-          toast.error("Session expired!");
-          localStorage.removeItem("accessToken");
-          setTimeout(() => (window.location.href = "/"), 300);
-
-          return;
-        } else {
-          return error?.response?.data;
-        }
-      } else {
-        return error.response?.data;
-      }
-    });
-};
-
 export const getRequest = async (
   endpoint,
   headers,

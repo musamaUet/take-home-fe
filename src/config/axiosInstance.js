@@ -1,10 +1,10 @@
 import axios from "axios";
 
 export const axiosInstance = axios.create({
-  baseURL:
-    process.env.NEXT_PUBLIC_STAGE === "dev"
-      ? process.env.NEXT_PUBLIC_LIVE_BACKEND_BASEURL
-      : process.env.NEXT_PUBLIC_LOCAL_BACKEND_BASEURL,
+  // baseURL:
+  //   process.env.NEXT_PUBLIC_STAGE === "dev"
+  //     ? process.env.NEXT_PUBLIC_LIVE_BACKEND_BASEURL
+  //     : process.env.NEXT_PUBLIC_LOCAL_BACKEND_BASEURL,
 });
 
 axiosInstance.interceptors.response.use(

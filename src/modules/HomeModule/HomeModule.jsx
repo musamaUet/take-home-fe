@@ -1,27 +1,19 @@
 import React, { useEffect, useState } from "react";
 import Loader from "../../components/Loader/Loader";
-import Swal from "sweetalert2";
 import NotFound from "../../components/NotFound/NotFound";
-import { DatetimeFormater } from "../../helpers/utils";
+import { DatetimeFormater, dateFormater } from "../../helpers/utils";
 import useSWR from "swr";
-import { fetchUsers } from "../../services/news.services";
+import { fetchGuardianNews } from "../../services/news.services";
 import PaginationComponent from "../../components/Pagination/PaginationComponent";
 import Input from "../../components/Input/Input";
 import { CiSearch } from "react-icons/ci";
-// import ActionsMenu from "../../components/ActionDropDown/ActionDropDown";
-import { toast } from "react-toastify";
-// import BasicModal from "@/src/Components/Modal/BasicModal";
 import { debounce } from "../../helpers/utils";
 import DatePickerComponent from "../../components/DatePicker/DatePicker";
 
 const HomeModule = () => {
   const [currentPage, setCurrentPage] = useState(1);
-  const [type, setType] = useState("all");
   const [search, setSearch] = useState("");
-  const [popup, setPopup] = useState(false);
   const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
-  const [editPopup, setEditPopup] = useState(false);
   const [debouncedSearch, setDebouncedSearch] = useState("");
 
   const handlePageChange = (page) => {
@@ -34,66 +26,24 @@ const HomeModule = () => {
   };
 
   const {
-    data: usersData,
+    data: guardianData,
     isLoading,
-    mutate,
-  } = useSWR(`/users/${currentPage}/${type}/${debouncedSearch}/`, () =>
-    fetchUsers(type, {
-      paginationLimits: 10,
+  } = useSWR(`/search/${currentPage}/${debouncedSearch}/${startDate}`, () =>
+    fetchGuardianNews({
+      'page-size': 10,
       page: currentPage,
-      name: debouncedSearch,
+      q: debouncedSearch,
+      ...(startDate && { 'from-date': dateFormater(startDate) })
     })
   );
 
-
   useEffect(() => {
     setCurrentPage(1);
-  }, [type]);
-
-//   const deleteEventHandler = (id: string) => {
-//     Swal.fire({
-//       title: "Are you sure?",
-//       text: "You won't be able to revert this!",
-//       icon: "warning",
-//       showCancelButton: true,
-//       confirmButtonColor: "#3085d6",
-//       cancelButtonColor: "#d33",
-//       confirmButtonText: "Yes, delete it!",
-//     }).then((result) => {
-//       if (result.isConfirmed) {
-//         acceptOrReject(id);
-//       }
-//     });
-//   };
-//   const edit = async (id: any, values: any) => {
-//     let newData = structuredClone(usersData);
-//     const index = newData?.data.findIndex((data: any) => data._id === id);
-//     newData.data[index] = { ...newData.data[index], ...values };
-//     const data = new FormData();
-
-//     try {
-//       for (let key in values) {
-//         data.append(key, values[key]);
-//       }
-//       await mutate(() => editUser(id, data), {
-//         optimisticData: newData,
-//         rollbackOnError: true,
-//         revalidate: false,
-//         populateCache: false,
-//         throwOnError: true,
-//       });
-//       if (Math.ceil(newData.count / 10) < currentPage && currentPage !== 1)
-//         setCurrentPage((prevPage) => --prevPage);
-//       toast.success("User updated Successfully.");
-//       setEditPopup(false);
-//     } catch (error) {
-//       Swal.fire("Error!", "Something went wrong.", "error");
-//     }
-//   };
-
-//   const editEvent = (id: any, values: any, type: string) => {
-//     if (type === "edit") return edit(id, values);
-//   };
+  }, [search, startDate]);
+  
+  const handleDateChange = (date) => {
+    setStartDate(date);
+  }
 
   return (
     <>
@@ -120,16 +70,7 @@ const HomeModule = () => {
                 value={startDate}
                 labelclassName="!left-1"
                 placeholder={"From Date"}
-                onDateChange={(date) => setStartDate(date)}
-              />
-            </div>
-            <div className="flex flex-col w-50 gap-2">
-              <DatePickerComponent
-                name="date"
-                value={endDate}
-                labelclassName="!left-1"
-                placeholder={"To Date"}
-                onDateChange={(date) => setEndDate(date)}
+                onDateChange={handleDateChange}
               />
             </div>
           </form>
@@ -138,65 +79,39 @@ const HomeModule = () => {
           {" "}
           {isLoading ? (
             <Loader loading={isLoading} />
-          ) : usersData?.count > 0 ? (
+          ) : guardianData?.total > 0 ? (
             <div className="overflow-hidden rounded-2xl overflow-x-auto bg-white">
               <table className="min-w-full at-tablestyle">
                 <thead>
                   <tr>
-                    <th>Full Name</th>
-                    <th>Email Address</th>
-                    <th>Joining Date</th>
-                    <th>City</th>
-                    <th>State</th>
-                    <th>Phone No.</th>
-                    <th>Zip code</th>
-                    <th>Action</th>
+                    <th>Section Name</th>
+                    <th>Pillar Name</th>
+                    <th>Published Date</th>
+                    <th>Web Title</th>
+                    <th>Is Hosted</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {usersData?.data?.map((user, i) => (
+                  {guardianData?.results?.map((data, i) => (
                     <tr key={i}>
                       <td>
                         <div className="flex items-center gap-3 w-60">
                           <h3 className="fs-16 w-full truncate font-bold leading-6 text-martinique">
-                            {user?.name && user?.name != ""
-                              ? user?.name
-                              : user?.email}
+                            {data?.sectionName ?? ""}
                           </h3>
                         </div>
                       </td>
                       <td className="text-secondary whitespace-nowrap">
-                        {user?.email}
+                        {data?.pillarName}
                       </td>
                       <td className="text-secondary whitespace-nowrap">
-                        {DatetimeFormater(user?.createdAt)}
+                        {DatetimeFormater(data?.webPublicationDate)}
                       </td>
                       <td className="text-secondary whitespace-nowrap">
-                        {user?.city || "N/A"}{" "}
+                        {data?.webTitle || "N/A"}{" "}
                       </td>
                       <td className="text-secondary whitespace-nowrap">
-                        {user?.state || "N/A"}{" "}
-                      </td>
-                      <td className="text-secondary whitespace-nowrap">
-                        {user?.phone || "N/A"}
-                      </td>
-                      <td className="text-secondary whitespace-nowrap">
-                        {user?.zipCode || "N/A"}
-                      </td>
-                      <td className="text-secondary">
-                        <>
-Action
-                          {/* <ActionsMenu
-                            deleteHandler={() => deleteEventHandler(user._id)}
-                            editPayload={{
-                              ...user,
-                            }}
-                            editPopup={editPopup}
-                            setEditPopup={setEditPopup}
-                            editEvent={editEvent}
-                            handleShow={() => {}}
-                          /> */}
-                        </>
+                        {data?.isHosted?.toString()}
                       </td>
                     </tr>
                   ))}
@@ -207,22 +122,14 @@ Action
             <NotFound />
           )}
         </>
-        {!isLoading && usersData?.count > 0 && (
+        {!isLoading && guardianData?.total > 0 && (
           <PaginationComponent
-            pageCount={usersData?.count}
+            pageCount={guardianData?.total}
             paginationLimit={10}
             current_page={currentPage}
             pageChange={handlePageChange}
           />
         )}
-        {/* {popup && (
-          <BasicModal
-            state={22}
-            popup={popup}
-            setPopup={setPopup}
-            editEvent={editEvent}
-          />
-        )} */}
       </div>
     </>
   );

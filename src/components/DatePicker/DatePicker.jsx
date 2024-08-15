@@ -1,14 +1,9 @@
 import React from "react";
-import { ErrorMessage } from "formik";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 const DatePickerComponent = ({
     className,
-    maxDate,
-    minDate,
-    minTime,
-    maxTime,
     onDateChange,
     value,
     SearchIcon,
@@ -24,15 +19,10 @@ const DatePickerComponent = ({
                     name={name}
                     showTimeSelect={false}
                     weekLabel={false}
-                    minDate={minDate}
-                    maxDate={maxDate}
                     autoComplete={false}
                     selected={value ?? ""}
                     type={Date}
                     disabled={disabled}
-                    minTime={minTime ? minTime : null}
-                    maxTime={maxTime ? maxTime : null}
-                    dateFormat="MMMM do, yyyy"
                     popperClassName="rt-themedatepicker"
                     onChange={onDateChange}
                     className={`rt-datepickerinput form-control input-text cursor-pointer ${className ? className : ""}`}
@@ -52,13 +42,6 @@ const DatePickerComponent = ({
                     </svg>
                 </span>
             </div>
-            {error && (
-                <ErrorMessage
-                    name="date"
-                    component="p"
-                    className="mt-1 block w-full text-start text-sm text-danger"
-                />
-            )}
         </>
     );
 };

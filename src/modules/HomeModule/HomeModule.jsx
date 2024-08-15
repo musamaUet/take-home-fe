@@ -12,12 +12,15 @@ import { CiSearch } from "react-icons/ci";
 import { toast } from "react-toastify";
 // import BasicModal from "@/src/Components/Modal/BasicModal";
 import { debounce } from "../../helpers/utils";
+import DatePickerComponent from "../../components/DatePicker/DatePicker";
 
 const HomeModule = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [type, setType] = useState("all");
   const [search, setSearch] = useState("");
   const [popup, setPopup] = useState(false);
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
   const [editPopup, setEditPopup] = useState(false);
   const [debouncedSearch, setDebouncedSearch] = useState("");
 
@@ -97,10 +100,10 @@ const HomeModule = () => {
       <div className="flex flex-col gap-10">
         <div className="flex sm:flex-row flex-col justify-between md:gap-0 sm:gap-8 gap-4 sm:items-center">
           <h2 className="fs-32 font-Baloo font-black leading-7 text-blackrussian sm:leading-9">
-            User Management
+            Guardian Times
           </h2>
-          <form className="flex xs:flex-col w-full sm:w-80 gap-5">
-            <div className="relative form-group w-full">
+          <form className="flex xs:flex-col w-50 gap-5">
+            <div className="relative form-group w-50">
               <Input
                 value={search}
                 onChange={handleSearchChange}
@@ -110,6 +113,24 @@ const HomeModule = () => {
               <span className="absolute top-1/2 -translate-y-1/2 left-4 cursor-pointer">
                 <CiSearch className="text-2xl text-dolphin" />
               </span>
+            </div>
+            <div className="flex flex-col w-50 gap-2">
+              <DatePickerComponent
+                name="date"
+                value={startDate}
+                labelclassName="!left-1"
+                placeholder={"From Date"}
+                onDateChange={(date) => setStartDate(date)}
+              />
+            </div>
+            <div className="flex flex-col w-50 gap-2">
+              <DatePickerComponent
+                name="date"
+                value={endDate}
+                labelclassName="!left-1"
+                placeholder={"To Date"}
+                onDateChange={(date) => setEndDate(date)}
+              />
             </div>
           </form>
         </div>
@@ -186,14 +207,14 @@ Action
             <NotFound />
           )}
         </>
-        {/* {!isLoading && usersData?.count > 0 && (
+        {!isLoading && usersData?.count > 0 && (
           <PaginationComponent
             pageCount={usersData?.count}
             paginationLimit={10}
             current_page={currentPage}
             pageChange={handlePageChange}
           />
-        )} */}
+        )}
         {/* {popup && (
           <BasicModal
             state={22}

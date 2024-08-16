@@ -4,6 +4,7 @@ import { KEYS } from "../config/keys";
 
 const guardianBaseUrl = `https://content.guardianapis.com/search?api-key=${KEYS.GUARDIAN}`;
 const newsBaseUrl = `https://newsapi.org/v2/everything?apiKey=${KEYS.NEWS}`;
+const nytBaseUrl = `https://api.nytimes.com/svc/search/v2/articlesearch.json?api-key=${KEYS.NEW_YORK}`
 
 export const fetchGuardianNews = async (query) => {
   const { response } = await getRequest(`${guardianBaseUrl}`, {}, query);
@@ -18,4 +19,9 @@ export const fetchNews = async (query) => {
   return response;
 };
 
-// https://newsapi.org/v2/everything?q=bitcoin&apiKey=4c9f4fd9f7314413870db593bba4175c&page=1&pageSize=5&from=2024-07-15&to=2024-08-19
+export const fetchNewYorkNews = async (query) => {
+  const { response } = await getRequest(`${nytBaseUrl}`, {}, query);
+  return response;
+};
+
+// https://api.nytimes.com/svc/search/v2/articlesearch.json?q=election&api-key=8JyMb8fTq4D0A4G1Jq2hOEM90I53czMd&page=1&page-size=10&offset=10

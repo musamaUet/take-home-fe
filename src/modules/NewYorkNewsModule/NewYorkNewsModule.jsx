@@ -49,7 +49,7 @@ const NewYorkNewsModule = () => {
       <div className="flex flex-col gap-10">
         <div className="flex sm:flex-row flex-col justify-between md:gap-0 sm:gap-8 gap-4 sm:items-center">
           <h2 className="fs-32 font-Baloo font-black leading-7 text-blackrussian sm:leading-9">
-            The News
+            New York Times News
           </h2>
           <form className="flex xs:flex-col w-50 gap-5">
             <div className="relative form-group w-50">

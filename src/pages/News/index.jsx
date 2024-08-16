@@ -1,7 +1,8 @@
 import React from 'react';
+import NewsModule from '../../modules/NewsModule/NewsModule';
 
 const News = () => {
-    return (<h1>This is News Page</h1>)
+    return (<NewsModule /> )
 }
 
 export default News;

@@ -1,16 +1,21 @@
+import { isEmpty } from "lodash";
 import { getRequest } from "../config/apiRequests";
 import { KEYS } from "../config/keys";
 
-const baseRoute = "/admin/users";
 const guardianBaseUrl = `https://content.guardianapis.com/search?api-key=${KEYS.GUARDIAN}`;
+const newsBaseUrl = `https://newsapi.org/v2/everything?apiKey=${KEYS.NEWS}`;
+
 export const fetchGuardianNews = async (query) => {
   const { response } = await getRequest(`${guardianBaseUrl}`, {}, query);
   return response;
 };
 
-// https://content.guardianapis.com/search?api-key=ad437c61-ba90-4adf-ac2c-85e0e4d24712&currentPage=1&pageSize=3&q=&from-date=2014-01-01
-
-export const fetchUsersListing = async (type, query) => {
-  const { data } = await getRequest(`${baseRoute}/${type}/listing`, {}, query);
-  return data;
+export const fetchNews = async (query) => {
+  if(isEmpty(query.q)) {
+    query.q = 'bitcoin';
+  }
+  const response = await getRequest(`${newsBaseUrl}`, {}, query);
+  return response;
 };
+
+// https://newsapi.org/v2/everything?q=bitcoin&apiKey=4c9f4fd9f7314413870db593bba4175c&page=1&pageSize=5&from=2024-07-15&to=2024-08-19

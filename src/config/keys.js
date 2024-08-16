@@ -1,3 +1,5 @@
 export const KEYS = {
     GUARDIAN: process.env.REACT_PUBLIC_THE_GUARDIAN_API || "ad437c61-ba90-4adf-ac2c-85e0e4d24712",
+    NEWS: process.env.REACT_PUBLIC_NEWS_API || "4c9f4fd9f7314413870db593bba4175c",
+    NEW_YORK: process.env.REACT_PUBLIC_NEW_YORK_API || "8JyMb8fTq4D0A4G1Jq2hOEM90I53czMd"
 }

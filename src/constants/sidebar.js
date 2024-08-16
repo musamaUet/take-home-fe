@@ -6,7 +6,7 @@ export const SidebarNavigation = [
   },
   {
     name: "The News",
-    href: "/news",
+    href: "/the-news",
     current: false,
   },
   {
